@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/StefanDywersant/testrepo-build-tools#readme",
   "dependencies": {
-    "node-getopt": "^0.2.3"
+    "node-getopt": "^0.2.3",
+    "opn": "^4.0.2"
   }
 }

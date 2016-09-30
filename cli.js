@@ -2,7 +2,9 @@
 
 
 const exec = require('child_process').exec,
-	getopt = require('node-getopt');
+	getopt = require('node-getopt'),
+	opn = require('opn'),
+	path = require('path');
 
 
 const exec_command = function(cmd) {
@@ -24,6 +26,30 @@ const exec_command = function(cmd) {
 };
 
 
+const package_json = function() {
+	return require(path.join(process.cwd(), 'package.json'));
+};
+
+
+const repository_url = function() {
+	const pkg_json = package_json();
+
+	if (!pkg_json.hasOwnProperty('repository')) {
+		throw new Error('Missing \'repository\' field in package.json');
+	}
+
+	if (pkg_json.repository.isPrototypeOf(String)) {
+		return pkg_json.repository;
+	}
+
+	if (!pkg_json.repository.hasOwnProperty('url')) {
+		throw new Error('Missing \'repository.url\' field in package.json');
+	}
+
+	return pkg_json.repository.url;
+};
+
+
 const preversion = function() {
 	return exec_command('git reset HEAD');
 };
@@ -33,9 +59,15 @@ const postversion = function() {
 	const opt = getopt.create([['v', 'version=ARG']])
 		.parseSystem();
 
-	console.log(opt);
+	return exec_command('git push')
+		.then(() => {
+			const changelog_url = repository_url()
+				.replace(/^(git\+https?|git\+ssh):\/\/(.*@)?/, 'https://')
+				.concat('/releases/tag/' + opt.options.version);
 
-	return exec_command('git push');
+			// asynchronous on purpose
+			opn(changelog_url);
+		});
 };
 
 
