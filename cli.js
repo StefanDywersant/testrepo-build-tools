@@ -59,11 +59,11 @@ const postversion = function() {
 	const opt = getopt.create([['v', 'version=ARG']])
 		.parseSystem();
 
-	return exec_command('git push')
+	return exec_command('git push --tags')
 		.then(() => {
 			const changelog_url = repository_url()
 				.replace(/^(git\+https?|git\+ssh):\/\/(.*@)?/, 'https://')
-				.concat('/releases/tag/' + opt.options.version);
+				.concat('/tags/v' + opt.options.version);
 
 			// asynchronous on purpose
 			opn(changelog_url);
