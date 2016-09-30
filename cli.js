@@ -12,7 +12,7 @@ const childProcess = require('child_process'),
  */
 const exec = function(cmd) {
 	return new Promise((resolve, reject) => {
-		console.log(cmd);
+		console.log(`> ${cmd}`);
 
 		childProcess.exec(cmd, {}, (error, stdout, stderr) => {
 			if (error) {
@@ -69,7 +69,7 @@ const action = function(func, ...args) {
 			() => process.exit(0),
 			(error) => {
 				console.error(error);
-				process.exit(3);
+				process.exit(1);
 			}
 		);
 };
@@ -81,9 +81,10 @@ const help = function() {
 	console.log('Usage: build-tools <action> [options...]');
 	console.log('');
 	console.log('Actions:');
-	console.log('preversion\t\tRuns NPM\'s preversion hook');
+	console.log('preversion\t\t\tRuns NPM\'s preversion hook');
 	console.log('');
-	console.log('postversion\t\tRuns NPM\'s postversion hook');
+	console.log('postversion\t\t\tRuns NPM\'s postversion hook');
+	console.log('\t--without-changelog\tDoesn\'t open browser with changelog');
 	console.log('');
 };
 
@@ -126,6 +127,12 @@ if (process.argv.length < 3) {
 	process.exit(1);
 }
 
+// display help
+if (process.argv.indexOf('-h') > -1 || process.argv.indexOf('--help') > -1) {
+	help();
+	process.exit(0);
+}
+
 // dispatch action
 switch (process.argv[2]) {
 	case 'preversion':
@@ -142,5 +149,5 @@ switch (process.argv[2]) {
 	default:
 		console.error(`Invalid command: ${process.argv[1]}`);
 		help();
-		process.exit(2);
+		process.exit(1);
 }
