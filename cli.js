@@ -84,7 +84,7 @@ const preversion = function() {
  * @returns {Promise}
  */
 const postversion = function(version) {
-	return exec('git push --tags')
+	return exec('git push --follow-tags')
 		.then(() => {
 			const changelogURL = repositoryURL()
 				.replace(/^(git\+https?|git\+ssh):\/\/(.*@)?(.+?)(\.git\/?)?$/, 'https://$3')
