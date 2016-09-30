@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 
-const exec = require('child_process').exec;
+const exec = require('child_process').exec,
+	getopt = require('node-getopt');
 
 
 const exec_command = function(cmd) {
@@ -29,6 +30,11 @@ const preversion = function() {
 
 
 const postversion = function() {
+	const opt = getopt.create([['-v', 'version=ARG']])
+		.parseSystem();
+
+	console.log(opt);
+
 	return exec_command('git push');
 };
 
@@ -45,11 +51,8 @@ const action = function(func, ...args) {
 };
 
 
-console.log('invoked with', process.argv.join(' '));
-
-
 if (process.argv.length < 3) {
-	console.error('Usage: cli.js <action>');
+	console.error('Usage: cli.js <action> [options...]');
 	process.exit(1);
 }
 

@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/StefanDywersant/testrepo-build-tools/issues"
   },
-  "homepage": "https://github.com/StefanDywersant/testrepo-build-tools#readme"
+  "homepage": "https://github.com/StefanDywersant/testrepo-build-tools#readme",
+  "dependencies": {
+    "node-getopt": "^0.2.3"
+  }
 }
