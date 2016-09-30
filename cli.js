@@ -30,7 +30,7 @@ const preversion = function() {
 
 
 const postversion = function() {
-	const opt = getopt.create([['-v', 'version=ARG']])
+	const opt = getopt.create([['v', 'version=ARG']])
 		.parseSystem();
 
 	console.log(opt);
