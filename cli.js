@@ -12,6 +12,8 @@ const childProcess = require('child_process'),
  */
 const exec = function(cmd) {
 	return new Promise((resolve, reject) => {
+		console.log(cmd);
+
 		childProcess.exec(cmd, {}, (error, stdout, stderr) => {
 			if (error) {
 				reject(error);
