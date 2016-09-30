@@ -112,8 +112,9 @@ const postversion = function(withoutChangelog) {
 				.replace(/^(git\+https?|git\+ssh):\/\/(.*@)?(.+?)(\.git\/?)?$/, 'https://$3')
 				.concat(`/releases/tag/v${packageJson().version}`);
 
-			// asynchronous on purpose
-			opn(changelogURL);
+			// GitHub needs some time to publish our commit
+			console.log('Waiting for GitHub...');
+			setTimeout(() => opn(changelogURL), 2000);
 		});
 };
 

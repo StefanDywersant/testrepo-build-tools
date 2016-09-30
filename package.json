@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "preversion": "node cli.js preversion",
-    "postversion": "node cli.js postversion",
+    "postversion": "node cli.js postversion --without-changelog",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
