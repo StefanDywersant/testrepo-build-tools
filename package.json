@@ -21,5 +21,8 @@
   "dependencies": {
     "node-getopt": "^0.2.3",
     "opn": "^4.0.2"
+  },
+  "bin": {
+    "build-tools": "cli.js"
   }
 }
