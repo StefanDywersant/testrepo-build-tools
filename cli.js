@@ -58,6 +58,11 @@ const repositoryURL = function() {
 	return pkgJson.repository.url;
 };
 
+/**
+ * Runs given action and handles errors.
+ * @param {function} func Pointer to action's function
+ * @param {object...} args Action arguments
+ */
 const action = function(func, ...args) {
 	func.apply(undefined, args)
 		.then(
@@ -67,6 +72,19 @@ const action = function(func, ...args) {
 				process.exit(3);
 			}
 		);
+};
+
+/**
+ * Displays help message.
+ */
+const help = function() {
+	console.log('Usage: build-tools <action> [options...]');
+	console.log('');
+	console.log('Actions:');
+	console.log('preversion\t\tRuns NPM\'s preversion hook');
+	console.log('');
+	console.log('postversion\t\tRuns NPM\'s postversion hook');
+	console.log('');
 };
 
 // *** ACTIONS ***
@@ -83,12 +101,16 @@ const preversion = function() {
  * NPM's postversion hook
  * @returns {Promise}
  */
-const postversion = function(version) {
+const postversion = function(withoutChangelog) {
 	return exec('git push --follow-tags')
 		.then(() => {
+			if (withoutChangelog) {
+				return;
+			}
+
 			const changelogURL = repositoryURL()
 				.replace(/^(git\+https?|git\+ssh):\/\/(.*@)?(.+?)(\.git\/?)?$/, 'https://$3')
-				.concat(`/releases/tag/v${version}`);
+				.concat(`/releases/tag/v${packageJson().version}`);
 
 			// asynchronous on purpose
 			opn(changelogURL);
@@ -99,7 +121,7 @@ const postversion = function(version) {
 
 // check arguments
 if (process.argv.length < 3) {
-	console.error('Usage: cli.js <action> [options...]');
+	help();
 	process.exit(1);
 }
 
@@ -110,13 +132,14 @@ switch (process.argv[2]) {
 		break;
 
 	case 'postversion':
-		const opt = getopt.create([['v', 'version=ARG']])
+		const opt = getopt.create([['', 'without-changelog']])
 			.parseSystem();
 
-		action(postversion, opt.options.version);
+		action(postversion, opt.options['without-changelog']);
 		break;
 
 	default:
 		console.error(`Invalid command: ${process.argv[1]}`);
+		help();
 		process.exit(2);
 }
