@@ -115,7 +115,13 @@ const postversion = function(withoutChangelog) {
 
 			// GitHub needs some time to publish our commit
 			console.log('Waiting for GitHub...');
-			setTimeout(() => opn(changelogURL), 2000);
+
+			return new Promise(resolve => {
+				setTimeout(() => {
+					opn(changelogURL);
+					resolve();
+				}, 2000);
+			});
 		});
 };
 
